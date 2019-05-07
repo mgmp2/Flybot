@@ -1,5 +1,5 @@
 {
-    "responseId": "d240f9df-a9e0-4679-b9f4-2fa2eb4ca204-bca4db85",
+    "responseId": "c6c24c27-7bdf-4380-b516-7d850146d68b-32138632",
     "queryResult": {
         "queryText": "eeuu",
         "action": "cotizar_seguro.cotizar_seguro-custom",

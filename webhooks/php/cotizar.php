@@ -4,6 +4,8 @@ global $fecha_retorno;
 
 global $correo;
 
+global $session_id_df;
+
 $canal_venta = '9';
 /*************************************
   1. GENERAR CODIGO DE VENTA
@@ -16,18 +18,33 @@ $body = (string) $response->getBody();
 // Mostrando tipo de dato
 $body = json_decode($body, true);
 
+
+
+if(intent_recibido("Default Fallback Intent")) {
+  enviar_texto("Estamos listo");
+}
+
+
 // 1.a. Obtener $codigo_destino
 if(intent_recibido("cotizar_seguro-destino")) {
-  global $mysqli;
+  global $session_id_df;
   global $input;
   debug();
 
   $destino = obtener_variables()["destinos"];
   $session_id = obtener_session_id();
-  $nombre = 'Miriamqq';
-  $apellido = 'Mendozx';
-  $codigo_venta = 'XXXXX';
-  $mysqli->query("INSERT INTO `USUARIOS`(`codigoUsuario`, `uNombre`, `uApellido`, `codigoVenta`) VALUES ('$session_id', '$nombre','$apellido','$codigo_venta')");
+
+  if ($session_id !== $session_id_df) {
+    $session_id_df = $session_id;
+    // enviar id_session de df
+    $options = [
+      'json' => [
+        'sesionDF' => $session_id
+         ]
+     ];
+    // $mensaje = "Codigo_destino $codigo_destino \n\n $cantidad_adulto adulto y $cantidad_nino niño \n\n FECHA PARTIDA $fecha_partida \n\n FECHA RETORNO: $fecha_retorno";
+    $responsePost =$dataBot->post("pregunta", $options);
+  }
   enviar_texto("Entiendo que deseas cubrir el destino $destino. ¿Cuántos adultos y niños deseas asegurar?");
   // $codigo_destino = obtener_codigo_destino($destino);
 }
