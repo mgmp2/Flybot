@@ -1,10 +1,5 @@
-<?php;
-global $fecha_partida;
-global $fecha_retorno;
-
+<?php
 global $correo;
-
-global $session_id_df;
 
 $canal_venta = '9';
 /*************************************
@@ -19,34 +14,10 @@ $body = (string) $response->getBody();
 $body = json_decode($body, true);
 
 
-
-if(intent_recibido("Default Fallback Intent")) {
-  enviar_texto("Estamos listo");
-}
-
-
 // 1.a. Obtener $codigo_destino
 if(intent_recibido("cotizar_seguro-destino")) {
-  global $session_id_df;
-  global $input;
-  debug();
-
   $destino = obtener_variables()["destinos"];
-  $session_id = obtener_session_id();
-
-  if ($session_id !== $session_id_df) {
-    $session_id_df = $session_id;
-    // enviar id_session de df
-    $options = [
-      'json' => [
-        'sesionDF' => $session_id
-         ]
-     ];
-    // $mensaje = "Codigo_destino $codigo_destino \n\n $cantidad_adulto adulto y $cantidad_nino niño \n\n FECHA PARTIDA $fecha_partida \n\n FECHA RETORNO: $fecha_retorno";
-    $responsePost =$dataBot->post("pregunta", $options);
-  }
   enviar_texto("Entiendo que deseas cubrir el destino $destino. ¿Cuántos adultos y niños deseas asegurar?");
-  // $codigo_destino = obtener_codigo_destino($destino);
 }
 
 //1.b Obtener $cantidad_adulto y $cantidad_nino
@@ -101,7 +72,6 @@ if(intent_recibido("cotizar_seguro-fechaIda_fechaVuelta")) {
   // 1.d Obtener $correo
   if(intent_recibido("cotizar_seguro-correo")) {
      $correo = obtener_variables()["email"];
-     global $mysqli;
      global $cantidad_adulto;
      global $cantidad_nino;
      global $fecha_partida;
@@ -123,7 +93,6 @@ if(intent_recibido("cotizar_seguro-fechaIda_fechaVuelta")) {
        $cantidad_adulto = $cantidad2;
        $cantidad_nino =  $cantidad1;
      }
-     enviar_texto(" Toda la información se le enviará al $correo en pocos minutos. Muchas gracias :D!");
 
      $fecha_partida = (date("d/m/Y", strtotime($fecha_partida)));
      $fecha_retorno = (date("d/m/Y", strtotime($fecha_retorno)));
@@ -148,12 +117,14 @@ if(intent_recibido("cotizar_seguro-fechaIda_fechaVuelta")) {
           ]
       ];
       // la cantidad de niño cuando no ponga hay que validarf que se envnie 0
-      $mysqli->query("INSERT INTO `COTIZAR`(`codigoVenta`, `codigoDestino`, `cantidadAdulto`, `cantidadNino`, `fechaPartida`, `fechaRetorno`, `canalVenta`) VALUES ('$codigoVenta', '$codigo_destino','$cantidad_adulto','$cantidad_nino','$fecha_partida','$fecha_retorno','9')");
      $responsePost2 = $client->post("cotizaciones/enviarcotizacion", $options2);
+     enviar_texto(" Toda la información se le enviará al $correo en pocos minutos. Muchas gracias :D!");
+
   }
   /*************************************
                   FUNCIONES
   *************************************/
+
   function obtener_codigo_destino($destino) {
     global $body;
     $destinos = $body['destinos'];

@@ -70,7 +70,7 @@ function recibir_variables($nombre)
 
 function obtener_session_id() {
   global $input;
-  $session_id = preg_split("/\//", $input["session"]);
+  $session_id = preg_split("/\//", $input["queryResult"]["outputContexts"][0]["name"]);
 
   return $session_id[4];
 }

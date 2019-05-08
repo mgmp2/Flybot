@@ -6,13 +6,38 @@
   $dataBot = new GuzzleHttp\Client(['base_uri' => 'https://api-flybot.herokuapp.com/api/']);
   $response = $client->request('GET', 'destinos/');
 
+
+  $responsePost =$dataBot->request("GET", 'pregunta');
+
+  $body = (string) $responsePost->getBody();
+
+  echo $body;
+  echo "<br>";
+  echo "---------1------";
+  echo "<br>";
+  $body = json_decode($body, true);
+  echo "<br>";
+  echo $body;
+  echo "<br>";
+  echo(sizeof($body["preguntas"]));
+  echo "<br>";
+  echo "--------2-------";
+  echo "<br>";
+  echo $body["preguntas"][0]["sesionDF"];
+  echo "<br>";
+  $tamaño = (sizeof($body["preguntas"])) - 1;
+  echo "-----3----------";
+  echo "<br>";
+  echo $tamaño;
+  echo "<br>";
+  echo $body["preguntas"][$tamaño]["sesionDF"];
   // require "../PHPMailer/Exception.php";
   // require "../PHPMailer/PHPMailer.php";
   // require "../PHPMailer/SMTP.php";
   // //
   // use PHPMailer\PHPMailer\PHPMailer;
-  // use PHPMailer\PHPMailer\Exception;
-  //
+  // use PHPMailer\PHPMailer\Exception(;
+  //)
   //
   //
   // $oMail = new PHPMailer();
