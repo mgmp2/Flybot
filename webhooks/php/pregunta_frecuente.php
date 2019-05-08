@@ -1,7 +1,12 @@
 <?php
   global $id_sesion;
-
+  global $descripcion;
   if (intent_recibido("Default Welcome Intent")) {
+    global $descripcion;
+
+    $descripcion = obtener_texto();
+
+
     guardarSesionDF();
   }
 
@@ -10,10 +15,10 @@
   }
 
   if(intent_recibido("Default Fallback Intent - yes")) {
+    global $descripcion;
     $nombreCliente = obtener_variables()["name"];
     $correo = obtener_variables()["email"];
     $telefono = obtener_variables()["phone"];
-    $descripcion = obtener_texto();
   //
     $options = [
       'json' => [
@@ -22,14 +27,13 @@
         	'correo'=> $correo,
         	'telefono'=> $telefono
         ],
-        "nivelSolicitud": "solicitudEspecifica",
-        "descripcion": $descripcion
+        'nivelSolicitud'=> 'solicitudEspecifica',
+        'descripcion'=> $descripcion
          ]
      ];
   //
-    $responsePost =$dataBot->request("POST", 'solicitud');
-  //
-    enviar_texto("Su solicitud ha sido enviado, se ha enviado a $correo una copia de la solciitud. Pronto se contactaran contigo");
+    $responsePost =$dataBot->post('solicitud', $options);
+    enviar_texto("Su solicitud ha sido enviado con éxito, también se ha enviado a $correo una copia de esta solciitud. Pronto se contactaran contigo");
   }
 
 
